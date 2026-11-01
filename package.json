@@ -1,0 +1,30 @@
+{
+  "name": "seaxch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Instant personal start page for the FMHY link directory",
+  "engines": {
+    "bun": ">=1.4.2"
+  },
+  "scripts": {
+    "docs": "bun scripts/fetch-docs.ts",
+    "build": "bun build.ts",
+    "dev": "bun scripts/serve.ts",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit",
+    "knip": "knip",
+    "check:live": "bun scripts/check-live.ts",
+    "e2e": "bun e2e/smoke.ts"
+  },
+  "dependencies": {
+    "@leeoniya/ufuzzy": "^1.0.19"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.4",
+    "@types/bun": "^1.4.4",
+    "knip": "^6.44.1",
+    "playwright": "^1.64.1",
+    "typescript": "^7.0.2"
+  }
+}
