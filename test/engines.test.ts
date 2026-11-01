@@ -23,6 +23,9 @@ describe("engine registry", () => {
 
 describe("preferences", () => {
   const engines = (o: object) => parsePrefs(JSON.stringify(o)).engines;
+  test("a legacy-looking order the reader saved since is kept", () => {
+    expect(engines({ engines: [...LEGACY_ENGINE_ORDER], ev: 1 })).toEqual([...LEGACY_ENGINE_ORDER]);
+  });
   test("defaults: Google first, no suggestions, nothing switched off", () => {
     const p = parsePrefs(null);
     expect(p.engines).toEqual([...DEFAULT_ENGINES]);

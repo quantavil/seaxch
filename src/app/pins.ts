@@ -26,7 +26,8 @@ export function bump(url: string): void {
 function tile(url: string, name: string, removable: boolean): HTMLAnchorElement {
   const a = anchor(url, "pin");
   a.dataset.u = url;
-  a.append(plate(url, name), el("span", "lb", name));
+  // starter picks are not the reader's: no third-party icon request until they pin or open something
+  a.append(plate(url, name, removable), el("span", "lb", name));
   if (removable) {
     const rm = el("button", "rm", "\u00d7");
     rm.type = "button";

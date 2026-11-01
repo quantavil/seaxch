@@ -295,7 +295,7 @@ footer a{color:var(--accent-text);font-weight:700;text-decoration:underline}
 .file-btn{position:relative}
 .file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;gap:.75rem;padding:.4rem .5rem .4rem 1.1rem;background:var(--ink);color:var(--bg);border-radius:22px;font-size:.875rem;font-weight:600}
-.toast-undo{min-height:2.5rem;padding:0 .9rem;background:none;color:var(--accent);border:0;font-weight:800}
+.toast-undo{min-height:2.5rem;padding:0 .9rem;background:none;color:var(--bg);border:0;font-weight:800;text-decoration:underline}
 .toast-undo:hover{background:none;text-decoration:underline}
 @media(prefers-reduced-motion:no-preference){
 ::view-transition-old(root){animation:90ms ease-out both fade-out}
@@ -363,6 +363,14 @@ main{padding:0 1rem calc(var(--dockh) + 1.75rem)}
 footer{margin-top:1.5rem;flex-direction:column;align-items:flex-start}
 .toast{bottom:calc(var(--dockh) + 1rem)}
 .st{margin-top:.75rem}
+/* searching: the keyboard takes half the screen, so everything that is not the query or its results goes (brand, settings, footer) */
+body.q .lead,body.q .icon-btn,body.q footer{display:none}
+body.q .top{padding:0}
+body.q main{padding-top:.75rem}
+body.q .st{margin:0 0 .5rem;font-size:.875rem}
+/* typing has not started yet: the web chips have nothing to search, so the keyboard keeps its room for the list */
+body:not(.q) .bar:focus-within .dock-engine-row{display:none}
+body:not(.q):has(.bar:focus-within){--dockh:4.9rem}
 .r{padding-left:1.2rem}
 .r::before{left:.5rem}
 .r .host{display:none}
@@ -372,6 +380,9 @@ footer{margin-top:1.5rem;flex-direction:column;align-items:flex-start}
 .list>.r:only-child{border-radius:21px}
 .cat-sec-header{padding-left:1rem}
 }
+
+/* short landscape phones: the chips would cover most of the list */
+@media(max-height:500px) and (max-width:899px){body.q .dock-engine-row{display:none}body.q{--dockh:4.9rem}}
 
 /* coarse pointers & touch: 44px targets */
 @media(pointer:coarse),(hover:none){

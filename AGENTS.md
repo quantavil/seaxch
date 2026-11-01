@@ -22,7 +22,7 @@ Personal start page for the FMHY link directory. Static only, no framework, no a
 - `src/app/search.ts` — uFuzzy over the full dataset. Remote suggestions are opt-in and live in `suggest.ts`
 - `src/app/render.ts` — result rows: group-hue bar (CSSOM `--h`) instead of an icon, bold name + star, 1-line desc (2 in section view), muted host, extras as slim text-links. No favicons here: a row can carry several links (main, mirror, subreddit), so one icon would misrepresent it
 - `src/app/plate.ts` + `src/shared/favicon.ts` — the icon plate for shelf pins and Lately only (the single-destination items): letter monogram always underneath, DuckDuckGo icon (`icons.duckduckgo.com/ip3/<host>.ico`) laid over once it loads, removed on error. Switch off in Settings → Privacy & data → Site icons (`prefs.icons`). Privacy: DDG sees the hostname of each pinned/recent site. CSP `img-src 'self' data: https://icons.duckduckgo.com` is the only third-party host, and it never appears in markup
-- External search is tap-only: the dock chips in the search bar are the only dispatch surface, plus zero-hit external rows in the list. Never `addRecent` for external queries.
+- External search is tap-only: the dock chips in the search bar are the only dispatch surface, and nothing else (the zero-hit status line points at Enter and the chips). Never `addRecent` for external queries.
 
 ## Conventions
 

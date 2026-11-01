@@ -135,13 +135,14 @@ export function showResults(term: string): void {
     st.textContent = `Nothing matches “${term}”. Press Enter to search ${first.n}, or pick a web chip.`;
     list.replaceChildren();
     more.hidden = true;
+    q.setAttribute("aria-expanded", "false");
   } else {
     st.textContent = `${fmt(r.total)} result${r.total === 1 ? "" : "s"} · Enter searches ${first.n}`;
     list.replaceChildren(...r.hits.map(hitRow));
     more.hidden = r.total <= r.hits.length;
   }
   list.hidden = false;
-  q.setAttribute("aria-expanded", "true");
+  if (r.total) q.setAttribute("aria-expanded", "true");
   selected = null;
   q.removeAttribute("aria-activedescendant");
   refreshSuggestions(term);

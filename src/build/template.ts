@@ -40,7 +40,7 @@ export function renderHtml(t: TemplateInput): string {
     const stars = t.topStarred?.[k]?.slice(0, 3) ?? [];
     const n = t.picks?.[k] ?? 0;
     const lead = n ? `<b>${fmtCount(n)} picks</b>${stars.length ? " \u00b7 " : ""}` : "";
-    const sub = lead || stars.length ? `<span class="ds">${lead}${stars.map(esc).join(" \u00b7 ")}</span>` : "";
+    const sub = !off && (lead || stars.length) ? `<span class="ds">${lead}${stars.map(esc).join(" \u00b7 ")}</span>` : "";
     return `<a class="dir${off}" id="t-${k}" href="#${k}"><span class="dn">${esc(pageName[k] ?? (k === NSFW_KEY ? NSFW_TITLE : k))}</span><span class="dc"><i>${off ? "Off" : fmtCount(t.counts[k] ?? 0)}</i></span>${sub}</a>`;
   };
   // NSFW is opt-in but never invisible: when the build ships it, its row is always listed ("Off" until one tap turns it on)

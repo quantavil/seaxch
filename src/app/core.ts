@@ -37,6 +37,7 @@ const goBack = () => {
 function route(): void {
   if (!ready) return;
   const homeWasShown = !home.hidden;
+  const settingsWasShown = !settingsView.hidden;
   if (homeWasShown) homeY = scrollY;
   const term = q.value.trim();
   document.body.classList.toggle("q", !!term);
@@ -56,7 +57,8 @@ function route(): void {
   hdrBack.hidden = !away;
   hdrBack.setAttribute("aria-label", showSettings ? "Back" : "Back to home");
 
-  if (showSettings) {
+  // a toggle inside Settings re-routes; only a fresh arrival rebuilds the page, so focus and scroll survive
+  if (showSettings && !settingsWasShown) {
     renderSettingsPage(settingsView);
     scrollTo(0, 0);
   }

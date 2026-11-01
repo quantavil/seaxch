@@ -146,6 +146,7 @@ try {
   const nsfw = pg.locator("#t-nsfw");
   check("nsfw: row is visible in Browse everything while off", (await nsfw.isVisible()) && /Off/.test(await nsfw.innerText()));
   check("nsfw: off row leaks no adult site names", !/HQPorner/i.test(await nsfw.innerText()));
+  check("nsfw: off row leaks no names in the page source either", !/HQPorner/i.test(await (await pg.request.get(pg.url().split("#")[0]!)).text()));
   await pg.fill("#q", "hqporner");
   await pg.waitForTimeout(300);
   check("nsfw: search finds nothing adult while off", (await pg.locator("#list .r:not(.ext-row)").count()) === 0);
@@ -233,7 +234,8 @@ try {
   await pg.waitForSelector("#cats .dir");
 
   // ---------- offline via service worker ----------
-  await pg.evaluate(() => navigator.serviceWorker.ready.then(() => 1));
+  const swReady = await pg.evaluate(() => Promise.race([navigator.serviceWorker.ready.then(() => 1), new Promise<number>((r) => setTimeout(() => r(0), 10_000))]));
+  check("offline: service worker becomes ready", swReady === 1);
   await pg.waitForTimeout(1500);
   await ctx.setOffline(true);
   await pg.reload();

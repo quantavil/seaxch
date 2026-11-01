@@ -57,8 +57,8 @@ export function parsePrefs(raw: string | null): Prefs {
     if (Array.isArray(o.engines)) {
       // drop keys that no longer exist (removed engines) and repeats, then append engines added since
       const kept: string[] = [...new Set<string>(o.engines.filter(isKnown))];
-      // an untouched first-release order (Yandex first) is not a choice: it moves to the current default
-      if (kept.length && !sameOrder(kept, LEGACY_ENGINE_ORDER)) p.engines = [...kept, ...DEFAULT_ENGINES.filter((k) => !kept.includes(k))];
+      // a first-release order (Yandex first) that was never re-saved by this version is not a choice: it moves to the current default once (`ev` marks orders written since)
+      if (kept.length && !(o.ev !== 1 && sameOrder(kept, LEGACY_ENGINE_ORDER))) p.engines = [...kept, ...DEFAULT_ENGINES.filter((k) => !kept.includes(k))];
     }
     if (Array.isArray(o.disabledEngines)) p.disabledEngines = o.disabledEngines.filter(isKnown);
     if (engineOf(o.suggest)?.sg) p.suggest = o.suggest;
@@ -91,6 +91,7 @@ export function save(): void {
         theme: prefs.theme,
         recents: prefs.recents,
         engines: prefs.engines,
+        ev: 1,
         disabledEngines: prefs.disabledEngines,
         suggest: prefs.suggest,
       }),
@@ -99,6 +100,15 @@ export function save(): void {
     /* ignore */
   }
 }
+
+// another tab saved: adopt its state, or this tab's next save would overwrite it with stale pins, Lately and prefs
+addEventListener("storage", (e: StorageEvent) => {
+  if (e.key !== KEY) return;
+  Object.assign(prefs, parsePrefs(e.newValue));
+  emit("pins");
+  emit("recents");
+  emit("prefs");
+});
 
 export function addRecent(url: string, name: string, host: string): void {
   if (!url || !name) return;

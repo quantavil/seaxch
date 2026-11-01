@@ -49,7 +49,7 @@ export function codeBlocks(html: string): string[] {
  * Same contract as the Python `load_base64_mappings`. Throws if nothing decodable is found.
  */
 export function parseGatewayMap(html: string): GatewayMap {
-  const map: GatewayMap = {};
+  const map: GatewayMap = Object.create(null);
   let current: string | null = null;
   const re = /<h[1-6]\b[^>]*?\bid\s*=\s*(?:"([^"]*)"|'([^']*)')[^>]*>|<code\b[^>]*>([\s\S]*?)<\/code>/gi;
   for (const m of html.matchAll(re)) {

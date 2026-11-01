@@ -19,6 +19,11 @@ describe("link scanner", () => {
     expect(r.links.map((l) => l.url)).toEqual(["https://a.b/c", "https://d.e/"]);
     expect(r.bad).toBe(0);
   });
+  test("a mark swallowed inside another link is still counted", () => {
+    const l = "[a](http://x [b](http://y))";
+    const r = scanLinks(l);
+    expect(r.links.length + r.bad).toBe(l.split("](http").length - 1);
+  });
   test("nested brackets in label", () => {
     expect(scanLinks("[Foo [bar]](https://x.y/)").links[0]!.label).toBe("Foo [bar]");
   });

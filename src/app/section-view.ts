@@ -56,7 +56,7 @@ function syncSec(sc: SecData): void {
   if (foldable) {
     sc.toggleEl.textContent = open ? "Show less" : `Show all ${fmt(sc.origCount)}`;
     sc.toggleEl.setAttribute("aria-expanded", String(open));
-    sc.toggleEl.setAttribute("aria-label", open ? `Collapse ${sc.name}` : `Show all ${sc.origCount} links`);
+    sc.toggleEl.setAttribute("aria-label", open ? `Collapse ${sc.name}` : `Show all ${fmt(sc.origCount)} links`);
   }
   if (!sc.forced) sc.countEl.textContent = fmt(open ? sc.origCount : Math.min(sc.origCount, COLLAPSE_N));
 }

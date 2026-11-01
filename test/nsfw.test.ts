@@ -9,6 +9,12 @@ import fx from "./fixtures/privatebin.json";
 const b64 = (s: string) => Buffer.from(s).toString("base64");
 
 describe("Base64 destination decoding (port of the Python converter)", () => {
+  test("gateway ids that are Object.prototype keys do not resolve or throw", () => {
+    const html = '<h2 id="constructor">x</h2><code>aHR0cHM6Ly9hLmV4YW1wbGUv</code><h2 id="__proto__">y</h2><code>aHR0cHM6Ly9iLmV4YW1wbGUv</code>';
+    expect(() => parseGatewayMap(html)).not.toThrow();
+    expect(gatewayId("https://rentry.co/FMHYB64#constructor")).toBe("constructor");
+    expect(applyGateways({ k: "x", n: "x", s: [{ n: "s", e: [["a", "https://rentry.co/FMHYB64#toString", "", 0]], b: [] }] } as never, {})).toBe(0);
+  });
   test("single layer", () => expect(decodeBase64Destination(b64("https://a.example/x"))).toBe("https://a.example/x"));
   test("nested layers and url-safe alphabet", () => {
     const inner = b64("https://paste.to/?abc#KEY?????>>");

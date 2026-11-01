@@ -18,7 +18,7 @@ const slotOf = (url: string): number => {
  * with the site's own icon laid over it once (and only if) it loads. The plate is a neutral
  * light square so transparent or dark icons stay readable in both themes.
  */
-export function plate(url: string, name: string): HTMLSpanElement {
+export function plate(url: string, name: string, remoteIcon = true): HTMLSpanElement {
   const p = document.createElement("span");
   p.className = "plate";
   const mono = document.createElement("span");
@@ -27,7 +27,7 @@ export function plate(url: string, name: string): HTMLSpanElement {
   mono.setAttribute("aria-hidden", "true");
   mono.textContent = monogram(name);
   p.append(mono);
-  const src = prefs.icons ? faviconUrl(url) : "";
+  const src = prefs.icons && remoteIcon ? faviconUrl(url) : "";
   if (src) {
     const img = new Image();
     img.className = "fav";

@@ -50,6 +50,8 @@ export function scanLinks(line: string): { links: MdLink[]; bad: number } {
       url = line.slice(i + 2, urlEnd === -1 ? close : urlEnd);
       end = close + 1;
     }
+    // a "](http" swallowed inside this link (nested in the url or its title) is still accounted for
+    for (let m = line.indexOf(MARK, from); m !== -1 && m < end; m = line.indexOf(MARK, m + MARK.length)) bad++;
     links.push({ label: line.slice(s + 1, i), url, s, e: end });
     prevEnd = end;
     from = end;

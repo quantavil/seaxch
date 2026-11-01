@@ -19,7 +19,7 @@ export function applyGateways(page: PageData, map: GatewayMap): number {
   let n = 0;
   const lookup = (url: string): string[] | null => {
     const id = gatewayId(url);
-    const dest = id ? map[id] : undefined;
+    const dest = id && Object.hasOwn(map, id) ? map[id] : undefined;
     return dest && dest.length ? dest : null;
   };
   const fixPairs = (pairs: Pair[] | undefined) => {

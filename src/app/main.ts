@@ -42,6 +42,7 @@ function renderRecents() {
 }
 renderRecents();
 on("recents", renderRecents);
+on("pins", () => renderPins(pins));
 $("clr-recents").addEventListener("click", clearRecents);
 
 pins.addEventListener("click", (e) => {
@@ -131,6 +132,6 @@ addEventListener("load", () => {
     const sw = navigator.serviceWorker;
     // a new build takes over the cache-first worker: reload once so this visit shows it, not the next one
     if (sw.controller) sw.addEventListener("controllerchange", () => location.reload(), { once: true });
-    sw.register(__SW__).catch(() => {});
+    sw.register(__SW__).catch((e) => console.warn("service worker registration failed", e));
   }
 });
