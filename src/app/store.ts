@@ -28,7 +28,7 @@ const isPair = (x: unknown): x is [string, string] => Array.isArray(x) && typeof
 const toPin = (x: [string, string, unknown?]): Pin => [x[0], x[1], +(x[2] as number) || 0];
 
 /** Pins from untrusted JSON (storage or an imported file): only well-formed [url, name, clicks] entries survive. */
-export const parsePins = (x: unknown): Pin[] => (Array.isArray(x) ? x.filter(isPair).map(toPin) : []);
+export const parsePins = (x: unknown): Pin[] => (Array.isArray(x) ? x.filter((p) => isPair(p) && /^https?:\/\//i.test(p[0])).map(toPin) : []);
 const sameOrder = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((k, i) => k === b[i]);
 
 /** Defaults overlaid with whatever the stored JSON holds that still makes sense. */
@@ -53,7 +53,7 @@ export function parsePrefs(raw: string | null): Prefs {
     if (o.newTab !== undefined) p.newTab = o.newTab !== 0;
     if (o.icons !== undefined) p.icons = o.icons !== 0;
     if (o.theme === "light" || o.theme === "dark" || o.theme === "system") p.theme = o.theme;
-    if (Array.isArray(o.recents)) p.recents = o.recents.filter(isPair).slice(0, 10);
+    if (Array.isArray(o.recents)) p.recents = o.recents.filter(isPair).slice(0, 8);
     if (Array.isArray(o.engines)) {
       // drop keys that no longer exist (removed engines) and repeats, then append engines added since
       const kept: string[] = [...new Set<string>(o.engines.filter(isKnown))];

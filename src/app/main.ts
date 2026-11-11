@@ -62,8 +62,7 @@ pins.addEventListener("click", (e) => {
     return;
   }
   if (t.closest(".add")) {
-    q.focus();
-    showToast("Search for a site, then tap its pin");
+    void import("./bookmark").then((m) => m.openBookmarkDialog(() => { renderPins(pins); emit("pins"); }));
     return;
   }
   if (pins.classList.contains("edit")) e.preventDefault();
@@ -80,7 +79,7 @@ const visit = (e: Event) => {
 pins.addEventListener("click", visit);
 pins.addEventListener("auxclick", visit);
 
-for (const id of ["star", "nsfw"] as const) {
+for (const id of ["nsfw"] as const) {
   const box = document.getElementById(id) as HTMLInputElement | null;
   if (!box) continue;
   box.checked = prefs[id];

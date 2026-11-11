@@ -108,6 +108,7 @@ function showSuggestions(items: string[]): void {
     return li;
   });
   const hasHits = !!list.querySelector(".r:not(.ext-row)");
+  if (rows.length) q.setAttribute("aria-expanded", "true");
   if (rows.length) list.prepend(caption(`Suggestions · ${engine.n}`), ...rows, ...(hasHits ? [caption("From the directory")] : []));
   if (at >= 0) select(rows[at] ?? null);
 }

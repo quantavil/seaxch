@@ -18,11 +18,28 @@ const CACHE = "fh-" + __VERSION__;
 const scope = sw.registration.scope;
 const INDEX = new URL("index.html", scope).href;
 
+/**
+ * A response that followed a redirect (Pages serves /index.html via a redirect to /) is refused by the browser
+ * for a navigation ("redirect mode is not follow"): the tab shows "site can't be reached", which is what a
+ * mobile browser homepage hit. Re-wrap it so it is a plain response.
+ */
+const plain = async (res: Response): Promise<Response> =>
+  res.redirected ? new Response(await res.blob(), { status: 200, statusText: res.statusText, headers: res.headers }) : res;
+
 sw.addEventListener("install", (e) => {
   e.waitUntil(
     caches
       .open(CACHE)
-      .then((c) => c.addAll(__PRECACHE__.map((u) => new URL(u, scope).href)))
+      .then((c) =>
+        Promise.all(
+          __PRECACHE__.map(async (u) => {
+            const url = new URL(u, scope).href;
+            const res = await fetch(url, { cache: "reload" });
+            if (!res.ok) throw new Error(`precache ${u}: ${res.status}`);
+            await c.put(url, await plain(res));
+          }),
+        ),
+      )
       .then(() => sw.skipWaiting()),
   );
 });
@@ -41,7 +58,12 @@ sw.addEventListener("fetch", (e) => {
   if (req.method !== "GET" || new URL(req.url).origin !== sw.location.origin) return;
 
   if (req.mode === "navigate") {
-    e.respondWith(caches.match(INDEX).then((hit) => hit ?? fetch(req)));
+    e.respondWith(
+      caches
+        .match(INDEX)
+        .then((hit) => (hit ? plain(hit) : fetch(req)))
+        .catch(() => fetch(req)),
+    );
     return;
   }
   e.respondWith(

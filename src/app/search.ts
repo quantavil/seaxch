@@ -53,14 +53,16 @@ function candidates(ix: Index, q: string): number[] {
   const terms = q.split(/\s+/).filter(Boolean);
   const exactName: number[] = [];
   const exactOther: number[] = [];
+  const exactPrefix: number[] = [];
   const qn = strip(q);
   for (let i = 0; i < ix.hay.length; i++) {
     const h = ix.hay[i]!;
     const name = ix.nn[i]!;
-    if (name.includes(qn)) exactName.push(i);
+    if (name.startsWith(qn)) exactPrefix.push(i);
+    else if (name.includes(qn)) exactName.push(i);
     else if (terms.every((t) => h.includes(t))) exactOther.push(i);
   }
-  const exact = exactName.concat(exactOther).slice(0, 1500);
+  const exact = exactPrefix.concat(exactName, exactOther).slice(0, 1500);
   if (exact.length >= 5) return exact;
   const run = (uf: uFuzzy) => {
     const [idxs, info, order] = uf.search(ix.hay, q, 3, 1500);

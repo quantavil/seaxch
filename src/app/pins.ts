@@ -16,6 +16,21 @@ export function togglePin(url: string, name: string): boolean {
   return i < 0;
 }
 
+/** Adds a hand-typed bookmark. Returns false when it is not an http(s) URL or is already on the shelf. */
+export function addPin(raw: string, name: string): boolean {
+  const t = raw.trim();
+  let u: URL;
+  try {
+    u = new URL(/^[a-z][a-z\d+.-]*:/i.test(t) ? t : "https://" + t);
+  } catch {
+    return false;
+  }
+  if (!/^https?:$/.test(u.protocol) || !u.hostname.includes(".") || isPinned(u.href)) return false;
+  prefs.pins.push([u.href, name.trim() || u.hostname.replace(/^www\./, ""), 0]);
+  save();
+  return true;
+}
+
 export function bump(url: string): void {
   const i = find(url);
   if (i < 0) return;
@@ -26,8 +41,7 @@ export function bump(url: string): void {
 function tile(url: string, name: string, removable: boolean): HTMLAnchorElement {
   const a = anchor(url, "pin");
   a.dataset.u = url;
-  // starter picks are not the reader's: no third-party icon request until they pin or open something
-  a.append(plate(url, name, removable), el("span", "lb", name));
+  a.append(plate(url, name), el("span", "lb", name));
   if (removable) {
     const rm = el("button", "rm", "\u00d7");
     rm.type = "button";

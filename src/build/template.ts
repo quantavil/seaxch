@@ -84,10 +84,14 @@ export function renderHtml(t: TemplateInput): string {
 <title>Seaxch</title>
 <link rel="icon" href="${FAVICON}">
 <link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Seaxch">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="modulepreload" href="${t.mainJs}">
 <style>${t.css}</style></head><body><main>
-<header class="top"><div class="lead"><a href="#" class="brand" aria-label="Seaxch home"><span class="mk">${markSvg(18)}</span><span class="brand-text">Seaxch</span></a><button type="button" id="hdr-back" class="back" aria-label="Back to home" title="Back" hidden>${backSvg(18)}</button></div><div class="bar" role="search"><div class="dock-input-inner">${SEARCH_ICON}<input id="q" type="search" placeholder="${searchPlaceholder}" aria-label="Search ${fmtCount(totalLinks)} links" role="combobox" aria-expanded="false" aria-controls="list" aria-autocomplete="list" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" dir="auto"><kbd class="slash" aria-hidden="true">/</kbd><button id="clr" type="button" aria-label="Clear search" hidden>${closeSvg(18)}</button></div><div class="dock-engine-row" id="dock-engines" aria-label="Search the web instead"><span class="dock-engine-label">Search the web</span>${chips}</div></div><a href="#settings" id="btn-settings" class="icon-btn" aria-label="Settings">${gearSvg(22)}</a></header>
+<header class="top"><div class="lead"><a href="#" class="brand" aria-label="Seaxch home"><span class="mk">${markSvg(18)}</span><span class="brand-text">Seaxch</span></a><button type="button" id="hdr-back" class="back" aria-label="Back to home" title="Back" hidden>${backSvg(18)}</button></div><div class="bar" role="search"><div class="dock-input-inner">${SEARCH_ICON}<input id="q" type="search" placeholder="${searchPlaceholder}" aria-label="Search ${fmtCount(totalLinks)} links" role="combobox" aria-expanded="false" aria-controls="list" aria-autocomplete="list" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" dir="auto"><kbd class="slash" aria-hidden="true">/</kbd><button id="clr" type="button" aria-label="Clear search" hidden>${closeSvg(18)}</button></div><div class="dock-engine-row" id="dock-engines" role="group" aria-label="Search the web instead"><span class="dock-engine-label">Search the web</span>${chips}</div></div><a href="#settings" id="btn-settings" class="icon-btn" aria-label="Settings">${gearSvg(22)}</a></header>
 <div class="opts">${nsfwChip}</div>
 <p class="st" id="st" aria-live="polite" hidden></p>
 <ol class="list" id="list" role="listbox" aria-label="Search results" hidden></ol>
@@ -106,12 +110,18 @@ export function renderHtml(t: TemplateInput): string {
 
 export function manifest() {
   return {
+    id: "./",
     name: "Seaxch",
     short_name: "Seaxch",
     description: "Instant start page for the FMHY link directory",
     start_url: "./",
     scope: "./",
     display: "standalone",
+    display_override: ["standalone", "minimal-ui"],
+    orientation: "any",
+    lang: "en",
+    categories: ["utilities", "productivity"],
+    shortcuts: [{ name: "Settings", short_name: "Settings", url: "./#settings" }],
     background_color: "#181411",
     theme_color: "#181411",
     icons: [

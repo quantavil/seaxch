@@ -113,7 +113,7 @@ addEventListener("keydown", (e: KeyboardEvent) => {
 // Record recents on main link clicks only (extras like Subreddit/Discord are not sites)
 document.addEventListener("click", (e) => {
   const a = (e.target as HTMLElement).closest<HTMLAnchorElement>("a.n");
-  if (a && a.href && !a.href.startsWith("javascript:") && !a.href.startsWith("#")) {
+  if (a && a.href) {
     addRecent(a.href, a.textContent?.trim() || bareHost(a), bareHost(a));
   }
 });

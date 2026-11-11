@@ -183,8 +183,11 @@ files["sw.js"] = await swBuild.outputs[0]!.text();
 
 // headers for hosts that honour a _headers file (Cloudflare Pages, Netlify). Hashed files are immutable.
 const immutable = [...js.map((f) => f.name), seedName, ...(nsfw ? [nsfwName] : [])];
+// Hashed files get only the immutable rule: a catch-all `/*` would also match them and Cloudflare joins repeated headers
+const revalidate = ["/", "/index.html", "/sw.js", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png"];
 files["_headers"] =
-  `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  Cache-Control: public, max-age=0, must-revalidate\n` +
+  `/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Referrer-Policy: no-referrer\n` +
+  revalidate.map((n) => `${n}\n  Cache-Control: public, max-age=0, must-revalidate\n`).join("") +
   immutable.map((n) => `/${n}\n  Cache-Control: public, max-age=31536000, immutable\n`).join("");
 files[".nojekyll"] = "";
 

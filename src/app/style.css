@@ -394,3 +394,14 @@ body:not(.q):has(.bar:focus-within){--dockh:4.9rem}
 .rm{width:1.75rem;height:1.75rem}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.pin:hover .plate{transform:none}}
+
+/* bookmark dialog */
+.bm{width:min(24rem,calc(100vw - 2rem));padding:1.25rem;border:1px solid var(--card-line);border-radius:20px;background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.bm::backdrop{background:rgba(0,0,0,.45)}
+.bm-form{display:flex;flex-direction:column;gap:.85rem}
+.bm-form h2{font-size:1.05rem}
+.bm-f{display:flex;flex-direction:column;gap:.3rem;font-size:.8125rem;font-weight:700;color:var(--mut)}
+.bm-f input{min-height:2.75rem;padding:0 .8rem;border-radius:12px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);font-size:1rem;font-weight:500}
+.bm-err{margin:0;font-size:.8125rem;color:var(--accent-text)}
+.bm-act{display:flex;justify-content:flex-end;gap:.5rem}
+.bm-save{background:var(--accent);border-color:var(--accent);color:#fff}

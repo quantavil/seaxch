@@ -13,7 +13,9 @@ export const catHue = (k: string) => GROUP_OF[k]?.hue ?? 45;
 /** Registrable-ish host: `fmy.github.io` -> `github.io`, `hub.com` stays. */
 function shortHost(host: string): string {
   const p = host.split(".");
-  return p.length > 2 ? p.slice(-2).join(".") : host;
+  // keep three labels under a two-letter country suffix with a generic second level (bbc.co.uk, not co.uk)
+  const n = p.length > 2 && p.at(-1)!.length === 2 && /^(co|com|org|net|ac|gov|edu)$/.test(p.at(-2)!) ? 3 : 2;
+  return p.length > n ? p.slice(-n).join(".") : host;
 }
 
 // static markup only; nothing from the dataset ever goes through innerHTML
